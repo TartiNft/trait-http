@@ -20,7 +20,7 @@ app.get("/prompt_bot", (req, res) => {
     //saved to a temp file, and that path is sent to us
     const botMetadataFile = req.query.bot_metadatafile;
 
-    let stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot=${botMetadataFile} ${whatToDo}`);
+    let stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot="${botMetadataFile}" ${whatToDo}`);
     res.json({ "BotResponse": stdout.toString() });
 });
 
