@@ -10,12 +10,17 @@ app.get("/prompt_bot", (req, res) => {
     //this is almost a direct line to the CLI and highly suseptable to injection attacks.
     //do not expose to the public internet, in this form
 
-    const whatToDo = req.query.what_to_do;
-    const botId = req.query.bot_id;
-    const pathToWapp = "C:\\Users\\admin\\Documents\\Beatmaker\\BeatMaker\\Bin\\wapp.bat";
+    if (!process.env.WAPP_PATH) {
+        throw new error("WAPP_PATH environment variable must be set");
+    }
 
-    const { execSync } = require('child_process');
-    let stdout = execSync(`${pathToWapp} PromptBot bot_id=${botId} ${whatToDo}`);
+    const whatToDo = req.query.what_to_do;
+    //bot_metadatafile was created by our caller.
+    // they got the bot metadata from the blockchain, 
+    //saved to a temp file, and that path is sent to us
+    const botMetadataFile = req.query.bot_metadatafile;
+
+    let stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot=${botMetadataFile} ${whatToDo}`);
     res.json({ "BotResponse": stdout.toString() });
 });
 
