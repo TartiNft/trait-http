@@ -12,7 +12,7 @@ app.get("/prompt_bot", (req, res) => {
 
     //here is some SO code I found and modified but have not tried.
     //It uses arguments instead of string interpliation to call command which
-    //would fix the injection conern.
+    //would fix the injection concern.
     //Also not sure if the `bot=${botMetadataFile}` part is safe
     /**
         const { spawn } = require('child_process');
@@ -47,8 +47,14 @@ app.get("/prompt_bot", (req, res) => {
     const metadataHash = crypto.createHash('md5').update(botMetadata).digest('hex');
     const botMetadataFile = `${os.tmpdir()}/${metadataHash}.traitbot`;
     fs.writeFileSync(botMetadataFile, botMetadata);
+    const stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot=${botMetadataFile} ${whatToDo}`);
 
-    let stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot=${botMetadataFile} ${whatToDo}`);
+    //find any local filenames in stdout and translate them to IPFS CIDs (after uploading/pinning them to Pinata)
+    // foreach stdout as responseItem
+    //     if responseItem is localfile
+    //         upload local file to IPFS and get CID
+    //              stdOut replace localfilename with IPFS url
+
     res.json({ "BotResponse": stdout.toString() });
 });
 
