@@ -54,6 +54,15 @@ app.get("/prompt_bot", (req, res) => {
     //     if responseItem is localfile
     //         upload local file to IPFS and get CID
     //              stdOut replace localfilename with IPFS url
+    //NAH scratch that!!! 
+    //The bot will just upload shit to IPFS and then return the CID.
+    //I kow originally the whole point of using NodeJs wa to use the Pinata SDK here
+    //but just makes way more sense to let the bot do it
+    //and then IPFS acts as a nice file broker. 
+    //Otherwise we need a separate file broker or we need to pass around potentially large data directly.
+    //akes a lot of convenient sense to just use IPFS.
+    //So to recap, by the time we get here, and file paths will already be IPFS.
+    //We need give bot a trait to do it
 
     res.json({ "BotResponse": stdout.toString() });
 });
