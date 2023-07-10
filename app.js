@@ -6,7 +6,7 @@ const port = 3000;
 
 app.get('/', (req, res) => res.send('TraitAI HTTP IO'));
 
-app.get("/prompt_bot", (req, res) => {
+app.post("/prompt_bot", (req, res) => {
     //this is almost a direct line to the CLI and highly suseptable to injection attacks.
     //do not expose to the public internet, in this form
 
@@ -33,10 +33,10 @@ app.get("/prompt_bot", (req, res) => {
      */
 
     if (!process.env.WAPP_PATH) {
-        throw new error("WAPP_PATH environment variable must be set");
+        throw new Error("WAPP_PATH environment variable must be set");
     }
 
-    const whatToDo = req.query.what_to_do;
+    const whatToDo = req.query.prompt;
 
     //bot_metadata was gotten by our caller.
     //they got the bot metadata from the blockchain
