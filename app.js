@@ -43,6 +43,7 @@ app.post("/prompt_bot", (req, res) => {
     const os = require("os");
     const fs = require("fs");
     const crypto = require("crypto");
+    if (!req.body.bot_metadata) throw new Error("Must pass Tartist metadata in the body");
     const botMetadata = req.body.bot_metadata;
     const metadataHash = crypto.createHash('md5').update(botMetadata).digest('hex');
     const botMetadataFile = `${os.tmpdir()}/${metadataHash}.traitbot`;
