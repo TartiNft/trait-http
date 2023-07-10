@@ -47,7 +47,7 @@ app.post("/prompt_bot", (req, res) => {
     const metadataHash = crypto.createHash('md5').update(botMetadata).digest('hex');
     const botMetadataFile = `${os.tmpdir()}/${metadataHash}.traitbot`;
     fs.writeFileSync(botMetadataFile, botMetadata);
-    const stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot=${botMetadataFile} ${whatToDo}`);
+    const stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot="${botMetadataFile}" ${whatToDo}`);
 
     //find any local filenames in stdout and translate them to IPFS CIDs (after uploading/pinning them to Pinata)
     // foreach stdout as responseItem
