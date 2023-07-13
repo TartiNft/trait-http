@@ -41,6 +41,7 @@ app.post("/prompt_bot", (req, res) => {
     }
 
     const whatToDo = req.query.prompt;
+    const allqueryParams = req.query;
 
     //bot_metadata was gotten by our caller.
     //they got the bot metadata from the blockchain
@@ -48,11 +49,31 @@ app.post("/prompt_bot", (req, res) => {
     const fs = require("fs");
     const crypto = require("crypto");
     if (!req.body.bot_metadata) throw new Error("Must pass Tartist metadata in the body");
-    const botMetadata = req.body.bot_metadata;
+
+    //were gonna hard code some traits here in the proxy.
+    //not sure if this is where this should go but its good for now.
+    const metaData = req.body.bot_metadata;
+    metaData.attributes.push({"value":"GenericBotNamer"});
+    metaData.attributes.push({"value":"GenericBotDescriber"});
+    metaData.attributes.push({"value":"OpenApiChatter"});
+    metaData.attributes.push({"value":"AvatarGenerator"});
+    metaData.attributes.push({"value":"ImageGenerator"});
+    metaData.attributes.push({"value":"FileDownloader"});
+    metaData.attributes.push({"trait_type":"IpfsFilePinner.JWT", "value":"***REMOVED***"});
+
+    const botMetadata = JSON.stringify(metaData);
     const metadataHash = crypto.createHash('md5').update(botMetadata).digest('hex');
     const botMetadataFile = `${os.tmpdir()}/${metadataHash}.traitbot`;
     fs.writeFileSync(botMetadataFile, botMetadata);
-    const stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot="${botMetadataFile}" ${whatToDo}`);
+    let cliContextArgs = "";
+    for (const queryParam in allqueryParams) {
+        if (queryParam != "prompt") {
+            cliContextArgs = `${queryParam}="${allqueryParams[queryParam]}" ${cliContextArgs}`;
+        }
+    }
+
+    const execSync = require('child_process').execSync;
+    const stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot="${botMetadataFile}" ${cliContextArgs.trim()} ${whatToDo}`);
 
     //find any local filenames in stdout and translate them to IPFS CIDs (after uploading/pinning them to Pinata)
     // foreach stdout as responseItem
@@ -69,7 +90,7 @@ app.post("/prompt_bot", (req, res) => {
     //So to recap, by the time we get here, and file paths will already be IPFS.
     //We need give bot a trait to do it
 
-    res.json({ "BotResponse": stdout.toString() });
+    res.json({ "BotResponse": stdout.toString().trim() });
 });
 
 
