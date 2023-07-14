@@ -10,6 +10,18 @@ const port = 3000;
 
 app.get('/', (req, res) => res.send('TraitAI HTTP IO'));
 
+app.get('/trait_files', (req, res) => {
+    const traitIo = require('./TraitIo');
+    let stdout = traitIo.callTraitAi("GetAllTraits", "");
+    res.json({ "BotResponse": stdout.toString().trim() });
+});
+
+app.get('/needed_birth_values', (req, res) => {
+    const traitIo = require('./TraitIo');
+    let stdout = traitIo.callTraitAi("GetNeededBirthValues", `Trait=${req.trait}`);
+    res.json({ "BotResponse": stdout.toString().trim() });
+});
+
 app.post("/prompt_bot", (req, res) => {
     //this is almost a direct line to the CLI and highly suseptable to injection attacks.
     //do not expose to the public internet, in this form
@@ -53,13 +65,13 @@ app.post("/prompt_bot", (req, res) => {
     //were gonna hard code some traits here in the proxy.
     //not sure if this is where this should go but its good for now.
     const metaData = req.body.bot_metadata;
-    metaData.attributes.push({"value":"GenericBotNamer"});
-    metaData.attributes.push({"value":"GenericBotDescriber"});
-    metaData.attributes.push({"value":"OpenApiChatter"});
-    metaData.attributes.push({"value":"AvatarGenerator"});
-    metaData.attributes.push({"value":"ImageGenerator"});
-    metaData.attributes.push({"value":"FileDownloader"});
-    metaData.attributes.push({"trait_type":"IpfsFilePinner.JWT", "value":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4NzY4Y2E2ZC0wZTJlLTQ0NGQtOGZmZi0zZGNhODU0ZmM0NzgiLCJlbWFpbCI6InRhcnRpbmZ0QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI5NmJkMDU5M2Y3OTM0YjU5MmI1NyIsInNjb3BlZEtleVNlY3JldCI6ImQxZGFiNmVjODVjNGM0YTBjZDM1YmJkYTBkYTk1YWJhNTA4ZmZhMzBmYzBiNmFlMzY1OTI4MGRlNjFmOWRmODQiLCJpYXQiOjE2ODkwNDYzNTR9.FEFbP_nEgm4bwj_kAhlQLlCO7lpsgl_p6DmaWG_iCy8"});
+    metaData.attributes.push({ "value": "GenericBotNamer" });
+    metaData.attributes.push({ "value": "GenericBotDescriber" });
+    metaData.attributes.push({ "value": "OpenApiChatter" });
+    metaData.attributes.push({ "value": "AvatarGenerator" });
+    metaData.attributes.push({ "value": "ImageGenerator" });
+    metaData.attributes.push({ "value": "FileDownloader" });
+    metaData.attributes.push({ "trait_type": "IpfsFilePinner.JWT", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4NzY4Y2E2ZC0wZTJlLTQ0NGQtOGZmZi0zZGNhODU0ZmM0NzgiLCJlbWFpbCI6InRhcnRpbmZ0QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI5NmJkMDU5M2Y3OTM0YjU5MmI1NyIsInNjb3BlZEtleVNlY3JldCI6ImQxZGFiNmVjODVjNGM0YTBjZDM1YmJkYTBkYTk1YWJhNTA4ZmZhMzBmYzBiNmFlMzY1OTI4MGRlNjFmOWRmODQiLCJpYXQiOjE2ODkwNDYzNTR9.FEFbP_nEgm4bwj_kAhlQLlCO7lpsgl_p6DmaWG_iCy8" });
 
     const botMetadata = JSON.stringify(metaData);
     const metadataHash = crypto.createHash('md5').update(botMetadata).digest('hex');
@@ -71,9 +83,8 @@ app.post("/prompt_bot", (req, res) => {
             cliContextArgs = `${queryParam}="${allqueryParams[queryParam]}" ${cliContextArgs}`;
         }
     }
-
-    const execSync = require('child_process').execSync;
-    const stdout = execSync(`${process.env.WAPP_PATH} PromptBot bot="${botMetadataFile}" ${cliContextArgs.trim()} ${whatToDo}`);
+    const traitIo = require('./TraitIo');
+    const stdout = traitIo.callTraitAi("PromptBot", `bot="${botMetadataFile}" ${cliContextArgs.trim()} ${whatToDo}`);
 
     //find any local filenames in stdout and translate them to IPFS CIDs (after uploading/pinning them to Pinata)
     // foreach stdout as responseItem
