@@ -18,7 +18,7 @@ app.get('/trait_files', (req, res) => {
 
 app.get('/needed_birth_values', (req, res) => {
     const traitIo = require('./TraitIo');
-    let stdout = traitIo.callTraitAi("GetNeededBirthValues", `Trait=${req.trait}`);
+    let stdout = traitIo.callTraitAi("GetNeededBirthValues", `Trait=${req.query.trait}`);
     res.json({ "BotResponse": stdout.toString().trim() });
 });
 
