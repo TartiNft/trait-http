@@ -71,6 +71,8 @@ app.post("/prompt_bot", (req, res) => {
     metaData.attributes.push({ "value": "AvatarGenerator" });
     metaData.attributes.push({ "value": "ImageGenerator" });
     metaData.attributes.push({ "value": "FileDownloader" });
+    metaData.attributes.push({ "value": "GenericSoundSelector" });
+    metaData.attributes.push({ "value": "GenericMusicThoerist" });
     metaData.attributes.push({ "trait_type": "IpfsFilePinner.JWT", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4NzY4Y2E2ZC0wZTJlLTQ0NGQtOGZmZi0zZGNhODU0ZmM0NzgiLCJlbWFpbCI6InRhcnRpbmZ0QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI5NmJkMDU5M2Y3OTM0YjU5MmI1NyIsInNjb3BlZEtleVNlY3JldCI6ImQxZGFiNmVjODVjNGM0YTBjZDM1YmJkYTBkYTk1YWJhNTA4ZmZhMzBmYzBiNmFlMzY1OTI4MGRlNjFmOWRmODQiLCJpYXQiOjE2ODkwNDYzNTR9.FEFbP_nEgm4bwj_kAhlQLlCO7lpsgl_p6DmaWG_iCy8" });
 
     const botMetadata = JSON.stringify(metaData);
