@@ -71,6 +71,8 @@ app.post("/prompt_bot", (req, res) => {
     metaData.attributes.push({ "value": "AvatarGenerator" });
     metaData.attributes.push({ "value": "ImageGenerator" });
     metaData.attributes.push({ "value": "FileDownloader" });
+    metaData.attributes.push({ "value": "GenericSoundSelector" });
+    metaData.attributes.push({ "value": "GenericMusicThoerist" });
     metaData.attributes.push({ "trait_type": "IpfsFilePinner.JWT", "value": "***REMOVED***" });
 
     const botMetadata = JSON.stringify(metaData);
