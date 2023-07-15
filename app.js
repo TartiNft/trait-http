@@ -1,6 +1,7 @@
 console.log("TraitAI HTTP is starting...")
 
 const express = require('express');
+require('dotenv').config();
 const app = express();
 app.use(express.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
@@ -73,7 +74,7 @@ app.post("/prompt_bot", (req, res) => {
     metaData.attributes.push({ "value": "FileDownloader" });
     metaData.attributes.push({ "value": "GenericSoundSelector" });
     metaData.attributes.push({ "value": "GenericMusicThoerist" });
-    metaData.attributes.push({ "trait_type": "IpfsFilePinner.JWT", "value": "***REMOVED***" });
+    metaData.attributes.push({ "trait_type": "IpfsFilePinner.JWT", "value": process.env.IPFS_FILE_PINNER_JWT });
 
     const botMetadata = JSON.stringify(metaData);
     const metadataHash = crypto.createHash('md5').update(botMetadata).digest('hex');
