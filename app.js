@@ -39,10 +39,16 @@ app.post("/prompt_bot", (req, res) => {
         throw new Error("WAPP_PATH environment variable must be set");
     }
     if (!req.body.bot_metadata) throw new Error("Must pass Tartist metadata in the body");
+    if (!req.body.bot_metadata.attributes) throw new Error("Invalid metadata: " + metaData);
 
     //Get the metadata for the bot they wish to prompt
     const metaData = req.body.bot_metadata;
-    if (!metaData.attributes) throw new Error("Invalid metadata: " + metaData);
+
+    //We add some Traits add here because we need them, but do not want to expose to the Dapp (usually because of secure tokens)
+    metaData.attributes.push({ "trait_type": "IpfsFilePinner.JWT", "value": process.env.IPFS_FILE_PINNER_JWT });
+
+    //Auto addd several other traits that we know the bots will need to make music.
+    //This is hard-coded for the initial demo only to help the users and keep it easy.
     metaData.attributes.push({ "value": "AvatarGenerator" });
     metaData.attributes.push({ "value": "AudioFileHandler" });
     metaData.attributes.push({ "value": "AudioProcessor" });
@@ -55,7 +61,6 @@ app.post("/prompt_bot", (req, res) => {
     metaData.attributes.push({ "value": "FileArchiver" });
     metaData.attributes.push({ "value": "GenericSoundSelector" });
     metaData.attributes.push({ "value": "GenericMusicThoerist" });
-    metaData.attributes.push({ "trait_type": "IpfsFilePinner.JWT", "value": process.env.IPFS_FILE_PINNER_JWT });
 
     //Store the metadata on disk for consumption by the Trait AI engine.
     //Use MD5 hash of the metadata to generate a unique, but reusable, file name.
