@@ -69,11 +69,11 @@ app.post("/prompt_bot", (req, res) => {
     const metadataHash = crypto.createHash('md5').update(botMetadata).digest('hex');
     const os = require("os");
     const botMetadataFile = `${os.tmpdir()}/${metadataHash}.traitbot`;
-    const allqueryParams = req.query;
     const fs = require("fs");
     fs.writeFileSync(botMetadataFile, botMetadata);
 
     //Convert the passed HTTP req vars into CLI args that Trait AI will understand
+    const allqueryParams = req.query;
     let cliContextArgs = "";
     for (const queryParam in allqueryParams) {
         if (queryParam != "prompt") {
