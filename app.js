@@ -66,12 +66,18 @@ app.post("/prompt_bot", (req, res) => {
     //were gonna hard code some traits here in the proxy.
     //not sure if this is where this should go but its good for now.
     const metaData = req.body.bot_metadata;
+
+    if (!metaData.attributes) throw new Error("Invalid metadata: " + metaData);
+    metaData.attributes.push({ "value": "AvatarGenerator" });
+    metaData.attributes.push({ "value": "AudioFileHandler" });
+    metaData.attributes.push({ "value": "AudioProcessor" });
+    metaData.attributes.push({ "value": "AudioVstProcessor" });
     metaData.attributes.push({ "value": "GenericBotNamer" });
     metaData.attributes.push({ "value": "GenericBotDescriber" });
     metaData.attributes.push({ "value": "OpenApiChatter" });
-    metaData.attributes.push({ "value": "AvatarGenerator" });
     metaData.attributes.push({ "value": "ImageGenerator" });
     metaData.attributes.push({ "value": "FileDownloader" });
+    metaData.attributes.push({ "value": "FileArchiver" });
     metaData.attributes.push({ "value": "GenericSoundSelector" });
     metaData.attributes.push({ "value": "GenericMusicThoerist" });
     metaData.attributes.push({ "trait_type": "IpfsFilePinner.JWT", "value": process.env.IPFS_FILE_PINNER_JWT });
