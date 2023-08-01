@@ -77,7 +77,7 @@ app.post("/prompt_bot", (req, res) => {
     metaData.attributes.push({ "value": "OpenApiChatter" });
     metaData.attributes.push({ "value": "ImageGenerator" });
     metaData.attributes.push({ "value": "FileDownloader" });
-    metaData.attributes.push({ "value": "FileArchiver" });
+    metaData.attributes.push({ "value": "FileArchivist" });
     metaData.attributes.push({ "value": "GenericSoundSelector" });
     metaData.attributes.push({ "value": "GenericMusicThoerist" });
     metaData.attributes.push({ "trait_type": "IpfsFilePinner.JWT", "value": process.env.IPFS_FILE_PINNER_JWT });
