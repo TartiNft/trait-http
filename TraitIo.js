@@ -1,3 +1,9 @@
+/**
+ * Invoke TRAIT AI Engine via system process
+ * @param {string} traitAiFunction 
+ * @param {string} argsString 
+ * @returns {string} stdout
+ */
 const callTraitAi = (traitAiFunction, argsString) => {
   const execSync = require('child_process').execSync;
   if (!argsString) {
