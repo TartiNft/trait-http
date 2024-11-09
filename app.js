@@ -1,7 +1,9 @@
 console.log("TraitAI HTTP is starting...")
-
 const express = require('express');
 require('dotenv').config();
+if (!process.env.WAPP_PATH) {
+    throw new Error("WAPP_PATH environment variable must be set");
+}
 const app = express();
 app.use(express.json());
 const port = 3000;
