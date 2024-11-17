@@ -91,8 +91,8 @@ app.post("/prompt_bot", (req, res) => {
 });
 
 //Start the HTTP server
-app.listen(port, () => console.log(`TraitAI HTTP IO listening on port ${port}!`));
-
+const server = app.listen(port, () => console.log(`TraitAI HTTP IO listening on port ${port}!`));
+server.setTimeout(1800000);
 //This is almost a direct line to the CLI and highly suseptable to injection attacks.
 //do not expose to the public internet, in this form
 //here is some SO code I found and modified but have not tried.
